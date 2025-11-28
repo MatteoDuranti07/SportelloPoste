@@ -20,7 +20,6 @@ public class GestoreArrivi implements Runnable {
         this.listaClienti = listaClienti;
     }
     /**
-     * TODO: cosa fa?
      * @see Runnable
      */
     public void run() {
