@@ -10,14 +10,16 @@ public class GestoreArrivi implements Runnable {
     /* variabili d'istanza sono;
      * la risorsa condivisa listaClienti */
     private ListaClienti listaClienti;
+    private int totem;
     /* ms fra un arrivo e l'altro */
     private final int attesaArrivi = 1000;
     /**
      * constructor
      * @param listaClienti
      */
-    public GestoreArrivi(ListaClienti listaClienti) {
+    public GestoreArrivi(ListaClienti listaClienti, int totem) {
         this.listaClienti = listaClienti;
+        this.totem = totem;
     }
     /**
      * @see Runnable
@@ -26,11 +28,11 @@ public class GestoreArrivi implements Runnable {
         try {
             while (!Thread.interrupted()) {
                 Thread.sleep(attesaArrivi);
-                Integer clienteArrivato = listaClienti.addCliente();
+                Integer clienteArrivato = listaClienti.addCliente(totem);
                 if (clienteArrivato == null) {
                     break;
                 }
-                System.out.println("Arrivo Cliente Numero \t " + clienteArrivato);
+
             }
         } catch (InterruptedException e) {
             System.out.println("Thread interrotto durante lo sleep");

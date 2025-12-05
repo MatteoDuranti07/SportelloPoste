@@ -51,11 +51,12 @@ public class ListaClienti {
      * e inserisce tale nuovo numero / ticket nella lista numeri
      * @return Integer: ultimoArrivo o null se gli arrivi saturano
      */
-    public synchronized Integer addCliente() {
+    public synchronized Integer addCliente(int totem) {
         if (ultimoArrivo < numeroMassimo) {
             ultimoArrivo++;
             listaNumeri.add(ultimoArrivo);
             notify();
+            System.out.println("Arrivo Cliente Numero \t " + ultimoArrivo + "Dal totem: " + totem);
             return ultimoArrivo;
         }
         return null;
