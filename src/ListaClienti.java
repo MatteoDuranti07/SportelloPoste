@@ -12,6 +12,7 @@ public class ListaClienti {
     private int ultimoArrivo;
     private int ultimoServito;
     private final int numeroMassimo = 10;
+    private final int numeroMassimoPersone = 3;
     /**
      * constructor
      * settaggio delle variabili di istanza
@@ -51,14 +52,24 @@ public class ListaClienti {
      * e inserisce tale nuovo numero / ticket nella lista numeri
      * @return Integer: ultimoArrivo o null se gli arrivi saturano
      */
-    public synchronized Integer addCliente(int totem) {
-        if (ultimoArrivo < numeroMassimo) {
+    public synchronized Integer addCliente(int totem) throws InterruptedException {
+        while (ultimoArrivo < numeroMassimo && controllo()) {
             ultimoArrivo++;
             listaNumeri.add(ultimoArrivo);
             notify();
+            System.out.println(controllo());
             System.out.println("Arrivo Cliente Numero \t " + ultimoArrivo + "Dal totem: " + totem);
             return ultimoArrivo;
         }
         return null;
+    }
+
+    public synchronized  boolean controllo() throws InterruptedException{
+        if(ultimoArrivo - ultimoServito <= numeroMassimoPersone){
+            return true;
+        } else {
+            wait();
+            return false;
+        }
     }
 }
