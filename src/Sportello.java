@@ -7,44 +7,30 @@
  * @author frida
  * @version 1.0
  */
-public class Sportello implements Runnable {
-    /**
-     * risorsa condivise fra i due thread (ListaClienti)
-     */
-    private ListaClienti listaClienti;
+public class Sportello extends Thread {
 
-    private final int minTempoServizio = 500;
-    private final int maxTempoServizio = 3000;
-    private String nome;
-    /**
-     * constructor
-     * @param listaClienti, String nome operatore
-     */
-    public Sportello(ListaClienti listaClienti, String nome) {
-        this.listaClienti = listaClienti;
-        this.nome = nome;
+    private ListaClienti lista;
+    private boolean aperto = true;
+
+    public Sportello(ListaClienti lista) {
+        this.lista = lista;
     }
 
-    /**
-     *
-     * @see Runnable
-     */
+
+    public void chiudi() {
+        aperto = false;
+    }
+    @Override
     public void run() {
-        try {
-            while (!Thread.interrupted()) {
-                Integer clienteServito = listaClienti.rimuoviCliente();
-                //tempo di servizio variabile nel range [1,4] secondi
-                int tempoServizio = (int) (Math.random() * (maxTempoServizio
-                        - minTempoServizio + 1) + minTempoServizio);
-                Thread.sleep(tempoServizio);
-                //Thread.sleep(1000); //tempo di servizio fisso
-                System.out.println("Servito Cliente Numero \t " + clienteServito+
-                        " dallo sportello "+ nome);
+        while (aperto) {
+            try {
+                Integer cliente = lista.prossimoCliente();
+                System.out.println("Servito cliente " + cliente);
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            System.out.println("Thread interrotto durante lo sleep");
-        } finally {
-            System.out.println("Sportello Chiuso");
         }
+        System.out.println("Sportello Chiuso");
     }
 }
